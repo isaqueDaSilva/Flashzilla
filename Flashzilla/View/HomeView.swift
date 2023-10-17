@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @Environment(\.accessibilityDifferentiateWithoutColor) var differentiateWithoutColor
     @StateObject var viewModel = HomeViewModel()
     var body: some View {
         ZStack {
@@ -24,6 +25,29 @@ struct HomeView: View {
                         }
                             .stacked(at: index, in: viewModel.cards.count)
                     }
+                }
+            }
+            
+            if differentiateWithoutColor {
+                VStack {
+                    Spacer()
+                    
+                    HStack {
+                        Image(systemName: "xmark.circle")
+                            .padding()
+                            .background(.black.opacity(0.7))
+                            .clipShape(Circle())
+                        
+                        Spacer()
+                        
+                        Image(systemName: "checkmark.circle")
+                            .padding()
+                            .background(.black.opacity(0.7))
+                            .clipShape(Circle())
+                    }
+                    .foregroundColor (.white)
+                    .font (.largeTitle)
+                    .padding()
                 }
             }
         }

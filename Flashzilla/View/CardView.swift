@@ -8,11 +8,17 @@
 import SwiftUI
 
 struct CardView: View {
+    @Environment(\.accessibilityDifferentiateWithoutColor) var differentiateWithoutColor
     @StateObject var viewModel: CardViewModel
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 25, style: .continuous)
-                .fill(.white)
+                .fill(differentiateWithoutColor ? .white : .white.opacity(1 - Double(abs(viewModel.offset.width / 50))))
+                .background(
+                    differentiateWithoutColor ? nil :
+                    RoundedRectangle(cornerRadius: 25, style: .continuous)
+                        .fill(viewModel.offset.width > 0 ? .green : .red)
+                )
                 .shadow(radius: 10)
             
             VStack {
