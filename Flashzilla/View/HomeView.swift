@@ -17,7 +17,11 @@ struct HomeView: View {
             VStack {
                 ZStack {
                     ForEach(0..<viewModel.cards.count, id: \.self) { index in
-                        CardView(card: viewModel.cards[index])
+                        CardView(card: viewModel.cards[index]) {
+                            withAnimation {
+                                viewModel.removeCard(at: index)
+                            }
+                        }
                             .stacked(at: index, in: viewModel.cards.count)
                     }
                 }

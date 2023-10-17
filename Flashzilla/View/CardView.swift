@@ -30,13 +30,29 @@ struct CardView: View {
             .multilineTextAlignment(.center)
         }
         .frame(width: 450, height: 250)
+        .rotationEffect(.degrees(Double(viewModel.offset.width / 5)))
+        .offset(x: viewModel.offset.width * 5, y: 0)
+        .opacity(2 - Double(abs(viewModel.offset.width / 50)))
+        .gesture(
+            DragGesture()
+                .onChanged({ gesture in
+                    viewModel.offset = gesture.translation
+                })
+                .onEnded({ _ in
+                    if abs(viewModel.offset.width) > 100 {
+                        viewModel.removal()
+                    } else {
+                        viewModel.offset = .zero
+                    }
+                })
+        )
         .onTapGesture {
             viewModel.isShowingAnswer.toggle()
         }
     }
     
-    init(card: Card) {
-        _viewModel = StateObject(wrappedValue: CardViewModel(card: card))
+    init(card: Card, remove: @escaping () -> Void) {
+        _viewModel = StateObject(wrappedValue: CardViewModel(card: card, removal: remove))
     }
 }
 
