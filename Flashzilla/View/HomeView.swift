@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(\.accessibilityDifferentiateWithoutColor) var differentiateWithoutColor
+    @Environment(\.scenePhase) var scenePhase
     @StateObject var viewModel = HomeViewModel()
     var body: some View {
         ZStack {
@@ -16,6 +17,14 @@ struct HomeView: View {
                 .resizable()
                 .ignoresSafeArea()
             VStack {
+                Text("Time: \(viewModel.timeRemaining)")
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 5)
+                    .background(.black.opacity(0.75))
+                    .clipShape(Capsule())
+                
                 ZStack {
                     ForEach(0..<viewModel.cards.count, id: \.self) { index in
                         CardView(card: viewModel.cards[index]) {
@@ -51,5 +60,16 @@ struct HomeView: View {
                 }
             }
         }
+        .onReceive(viewModel.timer, perform: { newTime in
+            viewModel.countdown()
+        })
+        
+        .onChange(of: scenePhase, perform: { newPhase in
+            if newPhase == .active {
+                viewModel.isActive = true
+            } else {
+                viewModel.isActive = false
+            }
+        })
     }
 }
