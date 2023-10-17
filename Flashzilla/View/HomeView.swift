@@ -35,6 +35,18 @@ struct HomeView: View {
                             .stacked(at: index, in: viewModel.cards.count)
                     }
                 }
+                .allowsHitTesting(viewModel.isPossible())
+                
+                if viewModel.cards.isEmpty {
+                    Button("Restart Game") {
+                        viewModel.gameReset()
+                    }
+                    .padding()
+                    .background(.white)
+                    .foregroundColor(.black)
+                    .clipShape(Capsule())
+                    .padding()
+                }
             }
             
             if differentiateWithoutColor {
@@ -66,7 +78,9 @@ struct HomeView: View {
         
         .onChange(of: scenePhase, perform: { newPhase in
             if newPhase == .active {
-                viewModel.isActive = true
+                if viewModel.cards.isEmpty {
+                    viewModel.isActive = true
+                }
             } else {
                 viewModel.isActive = false
             }

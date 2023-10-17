@@ -17,6 +17,10 @@ extension HomeView {
         
         func removeCard(at index: Int) {
             cards.remove(at: index)
+            
+            if cards.isEmpty {
+                isActive = false
+            }
         }
         
         func countdown() {
@@ -25,6 +29,20 @@ extension HomeView {
             if timeRemaining > 0 {
                 timeRemaining -= 1
             }
+        }
+        
+        func isPossible() -> Bool {
+            if timeRemaining > 0 {
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        func gameReset() {
+            cards = [Card](repeating: Card.example, count: 10)
+            timeRemaining = 100
+            isActive = true
         }
     }
 }
