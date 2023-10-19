@@ -56,7 +56,7 @@ struct HomeView: View {
             VStack {
                 HStack {
                     Spacer()
-
+                    
                     Button {
                         viewModel.showingEditCardView = true
                     } label: {
@@ -66,7 +66,7 @@ struct HomeView: View {
                             .clipShape(Circle())
                     }
                 }
-
+                
                 Spacer()
             }
             .foregroundColor(.white)
