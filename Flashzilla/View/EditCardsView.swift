@@ -19,10 +19,9 @@ struct EditCardsView: View {
                     TextField("Insert your answer", text: $viewModel.newAnswer)
                 }
                 
-                HStack {
-                    Spacer()
-                    
-                    if viewModel.isValid {
+                if viewModel.isValid {
+                    HStack {
+                        Spacer()
                         Button {
                             withAnimation {
                                 viewModel.addNewCard()
@@ -34,11 +33,10 @@ struct EditCardsView: View {
                                 .background(Color.blue)
                                 .cornerRadius(5)
                         }
+                        Spacer()
                     }
-                    
-                    Spacer()
+                    .listRowBackground(Color(CGColor(red: 240, green: 240, blue: 246, alpha: 0)))
                 }
-                .listRowBackground(Color(CGColor(red: 240, green: 240, blue: 246, alpha: 0)))
                 
                 if !viewModel.cards.isEmpty {
                     Section("Cards") {
