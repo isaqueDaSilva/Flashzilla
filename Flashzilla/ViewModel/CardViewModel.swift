@@ -13,8 +13,16 @@ extension CardView {
         @Published var card: Card
         @Published var isShowingAnswer = false
         @Published var offset = CGSize.zero
+        @Published var feedback = UINotificationFeedbackGenerator()
         
         var removal: () -> Void
+        
+        func feedbackPlayAndRemoveItem() {
+            if offset.width < 100 {
+                feedback.notificationOccurred(.error)
+            }
+            removal()
+        }
         
         init(card: Card, removal: @escaping () -> Void) {
             _card = Published(initialValue: card)

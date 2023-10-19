@@ -43,10 +43,11 @@ struct CardView: View {
             DragGesture()
                 .onChanged({ gesture in
                     viewModel.offset = gesture.translation
+                    viewModel.feedback.prepare()
                 })
                 .onEnded({ _ in
                     if abs(viewModel.offset.width) > 100 {
-                        viewModel.removal()
+                        viewModel.feedbackPlayAndRemoveItem()
                     } else {
                         viewModel.offset = .zero
                     }
