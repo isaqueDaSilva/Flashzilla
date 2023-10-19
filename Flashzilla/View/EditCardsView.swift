@@ -58,7 +58,7 @@ struct EditCardsView: View {
                 }
                 
                 ToolbarItem(placement: .topBarLeading) {
-                    if viewModel.cards.isEmpty {
+                    if !viewModel.cards.isEmpty {
                         EditButton()
                     }
                 }
