@@ -16,7 +16,7 @@ extension EditCardsView {
         @Published var newAnswer = ""
         
         var isValid: Bool {
-            if newPrompt.isEmpty && newAnswer.isEmpty {
+            if newPrompt.isEmpty || newAnswer.isEmpty {
                 return false
             } else {
                 return true
