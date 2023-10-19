@@ -15,6 +15,14 @@ extension EditCardsView {
         @Published var newPrompt = ""
         @Published var newAnswer = ""
         
+        var isValid: Bool {
+            if newPrompt.isEmpty && newAnswer.isEmpty {
+                return false
+            } else {
+                return true
+            }
+        }
+        
         func getCards() {
             Task { @MainActor in
                 await manager.fetchCards()

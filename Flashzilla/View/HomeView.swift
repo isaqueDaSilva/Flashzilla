@@ -42,7 +42,7 @@ struct HomeView: View {
                 .allowsHitTesting(viewModel.isPossible())
                 
                 if viewModel.cards.isEmpty {
-                    Button("Restart Game") {
+                    Button("Start a New Game") {
                         viewModel.gameReset()
                     }
                     .padding()

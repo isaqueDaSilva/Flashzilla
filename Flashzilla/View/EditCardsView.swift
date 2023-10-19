@@ -22,17 +22,20 @@ struct EditCardsView: View {
                 HStack {
                     Spacer()
                     
-                    Button {
-                        withAnimation {
-                            viewModel.addNewCard()
+                    if viewModel.isValid {
+                        Button {
+                            withAnimation {
+                                viewModel.addNewCard()
+                            }
+                        } label: {
+                            Text("Create New Card")
+                                .padding(10)
+                                .foregroundColor(.white)
+                                .background(Color.blue)
+                                .cornerRadius(5)
                         }
-                    } label: {
-                        Text("Create New Profile")
-                            .padding(10)
-                            .foregroundColor(.white)
-                            .background(Color.blue)
-                            .cornerRadius(5)
                     }
+                    
                     Spacer()
                 }
                 .listRowBackground(Color(CGColor(red: 240, green: 240, blue: 246, alpha: 0)))
