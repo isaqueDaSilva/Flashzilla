@@ -62,7 +62,9 @@ struct CardView: View {
                 })
         )
         .onTapGesture {
-            viewModel.isShowingAnswer.toggle()
+            withAnimation {
+                viewModel.isShowingAnswer.toggle()
+            }
         }
         .animation(.spring, value: viewModel.offset)
     }
