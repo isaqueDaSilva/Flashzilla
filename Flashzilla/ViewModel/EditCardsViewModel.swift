@@ -32,7 +32,7 @@ extension EditCardsView {
         }
         
         func deleteCard(at indexSet: IndexSet) {
-            Task {
+            Task { @MainActor in
                 guard let index = indexSet.first else { return }
                 let card = cards[index]
                 await manager.deleteCard(card: card)
