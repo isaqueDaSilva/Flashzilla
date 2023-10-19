@@ -12,6 +12,7 @@ struct HomeView: View {
     @Environment(\.accessibilityVoiceOverEnabled) var voiceOverEnabled
     @Environment(\.scenePhase) var scenePhase
     @StateObject var viewModel = HomeViewModel()
+    
     var body: some View {
         ZStack {
             Image(decorative: "background")
@@ -52,6 +53,26 @@ struct HomeView: View {
                 }
             }
             
+            VStack {
+                HStack {
+                    Spacer()
+
+                    Button {
+                        viewModel.showingEditCardView = true
+                    } label: {
+                        Image(systemName: "plus.circle")
+                            .padding()
+                            .background(.black.opacity(0.7))
+                            .clipShape(Circle())
+                    }
+                }
+
+                Spacer()
+            }
+            .foregroundColor(.white)
+            .font(.largeTitle)
+            .padding()
+            
             if differentiateWithoutColor || voiceOverEnabled {
                 VStack {
                     Spacer()
@@ -90,6 +111,9 @@ struct HomeView: View {
                     .padding()
                 }
             }
+        }
+        .sheet(isPresented: $viewModel.showingEditCardView, onDismiss: viewModel.gameReset) {
+            EditCardsView()
         }
         .onReceive(viewModel.timer, perform: { newTime in
             viewModel.countdown()

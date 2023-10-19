@@ -24,16 +24,16 @@ struct CardView: View {
             
             VStack {
                 if voiceOverEnabled {
-                    Text(viewModel.isShowingAnswer ? viewModel.card.answer : viewModel.card.prompt)
+                    Text(viewModel.isShowingAnswer ? viewModel.card.wrappedAnswer : viewModel.card.wrappedPrompt)
                         .font(.largeTitle)
                         .foregroundColor(.black)
                 } else {
-                    Text(viewModel.card.prompt)
+                    Text(viewModel.card.wrappedPrompt)
                         .font(.largeTitle)
                         .foregroundColor(.black)
                     
                     if viewModel.isShowingAnswer {
-                        Text(viewModel.card.answer)
+                        Text(viewModel.card.wrappedAnswer)
                             .font(.title)
                             .foregroundColor(.gray)
                     }
