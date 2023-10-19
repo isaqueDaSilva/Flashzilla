@@ -57,8 +57,8 @@ struct EditCardsView: View {
                     Button("Done") { dismiss() }
                 }
                 
-                if viewModel.cards.isEmpty {
-                    ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
+                    if viewModel.cards.isEmpty {
                         EditButton()
                     }
                 }
