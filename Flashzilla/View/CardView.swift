@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CardView: View {
     @Environment(\.accessibilityDifferentiateWithoutColor) var differentiateWithoutColor
+    @Environment(\.accessibilityVoiceOverEnabled) var voiceOverEnabled
     @StateObject var viewModel: CardViewModel
     var body: some View {
         ZStack {
@@ -22,14 +23,20 @@ struct CardView: View {
                 .shadow(radius: 10)
             
             VStack {
-                Text(viewModel.card.prompt)
-                    .font(.largeTitle)
-                    .foregroundColor(.black)
-                
-                if viewModel.isShowingAnswer {
-                    Text(viewModel.card.answer)
-                        .font(.title)
-                        .foregroundColor(.gray)
+                if voiceOverEnabled {
+                    Text(viewModel.isShowingAnswer ? viewModel.card.answer : viewModel.card.prompt)
+                        .font(.largeTitle)
+                        .foregroundColor(.black)
+                } else {
+                    Text(viewModel.card.prompt)
+                        .font(.largeTitle)
+                        .foregroundColor(.black)
+                    
+                    if viewModel.isShowingAnswer {
+                        Text(viewModel.card.answer)
+                            .font(.title)
+                            .foregroundColor(.gray)
+                    }
                 }
             }
             .padding()
@@ -39,6 +46,7 @@ struct CardView: View {
         .rotationEffect(.degrees(Double(viewModel.offset.width / 5)))
         .offset(x: viewModel.offset.width * 5, y: 0)
         .opacity(2 - Double(abs(viewModel.offset.width / 50)))
+        .accessibilityAddTraits(.isButton)
         .gesture(
             DragGesture()
                 .onChanged({ gesture in
@@ -56,6 +64,7 @@ struct CardView: View {
         .onTapGesture {
             viewModel.isShowingAnswer.toggle()
         }
+        .animation(.spring, value: viewModel.offset)
     }
     
     init(card: Card, remove: @escaping () -> Void) {

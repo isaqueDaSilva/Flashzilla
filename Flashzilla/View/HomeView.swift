@@ -9,11 +9,12 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(\.accessibilityDifferentiateWithoutColor) var differentiateWithoutColor
+    @Environment(\.accessibilityVoiceOverEnabled) var voiceOverEnabled
     @Environment(\.scenePhase) var scenePhase
     @StateObject var viewModel = HomeViewModel()
     var body: some View {
         ZStack {
-            Image(.background)
+            Image(decorative: "background")
                 .resizable()
                 .ignoresSafeArea()
             VStack {
@@ -32,7 +33,9 @@ struct HomeView: View {
                                 viewModel.removeCard(at: index)
                             }
                         }
-                            .stacked(at: index, in: viewModel.cards.count)
+                        .stacked(at: index, in: viewModel.cards.count)
+                        .allowsHitTesting(index == viewModel.cards.count - 1)
+                        .accessibilityHidden(index < viewModel.cards.count - 1)
                     }
                 }
                 .allowsHitTesting(viewModel.isPossible())
@@ -49,25 +52,41 @@ struct HomeView: View {
                 }
             }
             
-            if differentiateWithoutColor {
+            if differentiateWithoutColor || voiceOverEnabled {
                 VStack {
                     Spacer()
                     
                     HStack {
-                        Image(systemName: "xmark.circle")
-                            .padding()
-                            .background(.black.opacity(0.7))
-                            .clipShape(Circle())
+                        Button {
+                            withAnimation {
+                                viewModel.removeCard(at: viewModel.cards.count - 1)
+                            }
+                        } label: {
+                            Image(systemName: "xmark.circle")
+                                .padding()
+                                .background(.black.opacity(0.7))
+                                .clipShape(Circle())
+                        }
+                        .accessibilityLabel("Wrong")
+                        .accessibilityHint("Mark your answer as being incorrect.")
                         
                         Spacer()
                         
-                        Image(systemName: "checkmark.circle")
-                            .padding()
-                            .background(.black.opacity(0.7))
-                            .clipShape(Circle())
+                        Button {
+                            withAnimation {
+                                viewModel.removeCard(at: viewModel.cards.count - 1)
+                            }
+                        } label: {
+                            Image(systemName: "checkmark.circle")
+                                .padding()
+                                .background(.black.opacity(0.7))
+                                .clipShape(Circle())
+                        }
+                        .accessibilityLabel("Correct")
+                        .accessibilityHint("Mark your answer as being correct.")
                     }
                     .foregroundColor (.white)
-                    .font (.largeTitle)
+                    .font(.largeTitle)
                     .padding()
                 }
             }

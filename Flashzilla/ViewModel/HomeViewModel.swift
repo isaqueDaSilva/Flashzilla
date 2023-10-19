@@ -16,8 +16,9 @@ extension HomeView {
         let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
         
         func removeCard(at index: Int) {
-            cards.remove(at: index)
+            guard index >= 0 else { return }
             
+            cards.remove(at: index)
             if cards.isEmpty {
                 isActive = false
             }
