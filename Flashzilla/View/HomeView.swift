@@ -115,13 +115,14 @@ struct HomeView: View {
         .sheet(isPresented: $viewModel.showingEditCardView, onDismiss: viewModel.gameReset) {
             EditCardsView()
         }
+        
         .onReceive(viewModel.timer, perform: { newTime in
             viewModel.countdown()
         })
         
         .onChange(of: scenePhase, perform: { newPhase in
             if newPhase == .active {
-                if viewModel.cards.isEmpty {
+                if !viewModel.cards.isEmpty {
                     viewModel.isActive = true
                 }
             } else {
