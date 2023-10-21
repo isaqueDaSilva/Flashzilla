@@ -14,26 +14,26 @@ struct CardView: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 25, style: .continuous)
-                .fill(differentiateWithoutColor ? .white : .white.opacity(1 - Double(abs(viewModel.offset.width / 50))))
+                .fill(differentiateWithoutColor ? .white : viewModel.cardFill())
                 .background(
                     differentiateWithoutColor ? nil :
                     RoundedRectangle(cornerRadius: 25, style: .continuous)
-                        .fill(viewModel.offset.width > 0 ? .green : .red)
+                        .fill(viewModel.cardFillBackground())
                 )
                 .shadow(radius: 10)
             
             VStack {
                 if voiceOverEnabled {
-                    Text(viewModel.isShowingAnswer ? viewModel.card.wrappedAnswer : viewModel.card.wrappedPrompt)
+                    Text(viewModel.accessibilityPromptAndAnswerText())
                         .font(.largeTitle)
                         .foregroundColor(.black)
                 } else {
-                    Text(viewModel.card.wrappedPrompt)
+                    Text(viewModel.prompt())
                         .font(.largeTitle)
                         .foregroundColor(.black)
                     
                     if viewModel.isShowingAnswer {
-                        Text(viewModel.card.wrappedAnswer)
+                        Text(viewModel.answer())
                             .font(.title)
                             .foregroundColor(.gray)
                     }
@@ -43,27 +43,23 @@ struct CardView: View {
             .multilineTextAlignment(.center)
         }
         .frame(width: 450, height: 250)
-        .rotationEffect(.degrees(Double(viewModel.offset.width / 5)))
+        .rotationEffect(.degrees(viewModel.degress()))
         .offset(x: viewModel.offset.width * 5, y: 0)
-        .opacity(2 - Double(abs(viewModel.offset.width / 50)))
+        .opacity(viewModel.opacity())
         .accessibilityAddTraits(.isButton)
         .gesture(
             DragGesture()
                 .onChanged({ gesture in
                     viewModel.offset = gesture.translation
-                    viewModel.feedback.prepare()
+                    viewModel.feedbackPrepare()
                 })
-                .onEnded({ _ in
-                    if abs(viewModel.offset.width) > 100 {
-                        viewModel.feedbackPlayAndRemoveItem()
-                    } else {
-                        viewModel.offset = .zero
-                    }
-                })
+                .onEnded { _ in
+                    viewModel.removeOrBackToInitialPosition()
+                }
         )
         .onTapGesture {
             withAnimation {
-                viewModel.isShowingAnswer.toggle()
+                viewModel.toggle()
             }
         }
         .animation(.spring, value: viewModel.offset)

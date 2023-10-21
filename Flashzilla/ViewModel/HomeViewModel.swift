@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension HomeView {
     class HomeViewModel: ObservableObject {
@@ -15,8 +16,45 @@ extension HomeView {
         @Published var timeRemaining = 100
         @Published var isActive = true
         @Published var showingEditCardView = false
+        @AppStorage("Status") var status: GameStatus = .play
         
         let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+        
+        func playOrPause() {
+            withAnimation {
+                isActive.toggle()
+            }
+            if isActive {
+                status = .play
+            } else {
+                status = .pause
+            }
+        }
+        
+        func scenePhase() {
+            if !cards.isEmpty {
+                if status == .play {
+                    isActive = true
+                }
+            }
+        }
+        
+        func cardIndex(card: Card) -> Int? {
+            guard let index = cards.firstIndex(of: card) else { return nil }
+            
+            return index
+        }
+        
+        func isValid(card: Card) -> Bool {
+            guard isActive else { return false }
+            let index = cardIndex(card: card)
+            
+            return index! == cards.count - 1 ? true : false
+        }
+        
+        func isPossible() -> Bool {
+            timeRemaining > 0 ? true : false
+        }
         
         func getCards() {
             Task { @MainActor in
@@ -25,10 +63,10 @@ extension HomeView {
             }
         }
         
-        func removeCard(at index: Int) {
-            guard index >= 0 else { return }
+        func removeCard(card: Card) {
+            let index = cardIndex(card: card)
             
-            cards.remove(at: index)
+            cards.remove(at: index!)
             if cards.isEmpty {
                 isActive = false
             }
@@ -40,14 +78,6 @@ extension HomeView {
             
             if timeRemaining > 0 {
                 timeRemaining -= 1
-            }
-        }
-        
-        func isPossible() -> Bool {
-            if timeRemaining > 0 {
-                return true
-            } else {
-                return false
             }
         }
         

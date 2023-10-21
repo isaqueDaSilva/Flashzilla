@@ -17,11 +17,61 @@ extension CardView {
         
         var removal: () -> Void
         
-        func feedbackPlayAndRemoveItem() {
+        // Prompt and Answer
+        func prompt() -> String {
+            card.wrappedPrompt
+        }
+        
+        func answer() -> String {
+            card.wrappedAnswer
+        }
+        
+        func accessibilityPromptAndAnswerText() -> String {
+            isShowingAnswer ? card.wrappedAnswer : card.wrappedPrompt
+        }
+        
+        //Haptic Feedback
+        func feedbackPrepare() {
+            feedback.prepare()
+        }
+        
+        func feedbackPlay() {
             if offset.width < 100 {
                 feedback.notificationOccurred(.error)
             }
-            removal()
+        }
+        
+        //Toggle
+        func toggle() {
+            isShowingAnswer.toggle()
+        }
+        
+        //Colors
+        func cardFill() -> Color {
+            Color.white.opacity(1 - Double(abs(offset.width / 50)))
+        }
+        
+        func cardFillBackground() -> Color {
+            offset.width == .zero ? .white : (offset.width > 0 ? .green : .red)
+        }
+        
+        //Card Effect
+        func degress() -> Double {
+            Double(offset.width / 5)
+        }
+        
+        func opacity() -> Double {
+            2 - Double(abs(offset.width / 50))
+        }
+        
+        // Drag Gesture End Action
+        func removeOrBackToInitialPosition() {
+            if abs(offset.width) > 100 {
+                removal()
+            } else {
+                feedbackPlay()
+                offset = .zero
+            }
         }
         
         init(card: Card, removal: @escaping () -> Void) {

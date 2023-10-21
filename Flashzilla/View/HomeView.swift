@@ -18,6 +18,7 @@ struct HomeView: View {
             Image(decorative: "background")
                 .resizable()
                 .ignoresSafeArea()
+            
             VStack {
                 Text("Time: \(viewModel.timeRemaining)")
                     .font(.largeTitle)
@@ -28,22 +29,24 @@ struct HomeView: View {
                     .clipShape(Capsule())
                 
                 ZStack {
-                    ForEach(0..<viewModel.cards.count, id: \.self) { index in
-                        CardView(card: viewModel.cards[index]) {
+                    ForEach(viewModel.cards) { card in
+                        CardView(card: card) {
                             withAnimation {
-                                viewModel.removeCard(at: index)
+                                viewModel.removeCard(card: card)
                             }
                         }
-                        .stacked(at: index, in: viewModel.cards.count)
-                        .allowsHitTesting(index == viewModel.cards.count - 1)
-                        .accessibilityHidden(index < viewModel.cards.count - 1)
+                        .stacked(at: viewModel.cardIndex(card: card)!, in: viewModel.cards.count)
+                        .allowsHitTesting(viewModel.isValid(card: card))
+                        .accessibilityHidden(viewModel.cardIndex(card: card)! < viewModel.cards.count - 1)
                     }
                 }
                 .allowsHitTesting(viewModel.isPossible())
                 
                 if viewModel.cards.isEmpty {
                     Button("Start a New Game") {
-                        viewModel.gameReset()
+                        withAnimation {
+                            viewModel.gameReset()
+                        }
                     }
                     .padding()
                     .background(.white)
@@ -55,6 +58,15 @@ struct HomeView: View {
             
             VStack {
                 HStack {
+                    Button {
+                        viewModel.playOrPause()
+                    } label: {
+                        Image(systemName: viewModel.isActive ? "pause.circle" : "play.circle")
+                            .padding()
+                            .background(.black.opacity(0.7))
+                            .clipShape(Circle())
+                    }
+                    
                     Spacer()
                     
                     Button {
@@ -66,11 +78,10 @@ struct HomeView: View {
                             .clipShape(Circle())
                     }
                 }
-                
                 Spacer()
             }
             .foregroundColor(.white)
-            .font(.largeTitle)
+            .font(.title)
             .padding()
             
             if differentiateWithoutColor || voiceOverEnabled {
@@ -80,7 +91,7 @@ struct HomeView: View {
                     HStack {
                         Button {
                             withAnimation {
-                                viewModel.removeCard(at: viewModel.cards.count - 1)
+                                viewModel.removeCard(card: viewModel.cards.last!)
                             }
                         } label: {
                             Image(systemName: "xmark.circle")
@@ -95,7 +106,7 @@ struct HomeView: View {
                         
                         Button {
                             withAnimation {
-                                viewModel.removeCard(at: viewModel.cards.count - 1)
+                                viewModel.removeCard(card: viewModel.cards.last!)
                             }
                         } label: {
                             Image(systemName: "checkmark.circle")
@@ -123,7 +134,9 @@ struct HomeView: View {
         .onChange(of: scenePhase, perform: { newPhase in
             if newPhase == .active {
                 if !viewModel.cards.isEmpty {
-                    viewModel.isActive = true
+                    if viewModel.status == .play {
+                        viewModel.isActive = true
+                    }
                 }
             } else {
                 viewModel.isActive = false
