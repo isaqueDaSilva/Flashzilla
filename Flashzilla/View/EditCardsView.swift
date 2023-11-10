@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EditCardsView: View {
     @Environment(\.dismiss) var dismiss
-    @StateObject var viewModel = EditCardsViewModel()
+    @StateObject var viewModel: EditCardsViewModel
     
     var body: some View {
         NavigationView {
@@ -65,5 +65,9 @@ struct EditCardsView: View {
                 }
             }
         }
+    }
+    
+    init(manager: CardsManager) {
+        _viewModel = StateObject(wrappedValue: EditCardsViewModel(manager: manager))
     }
 }

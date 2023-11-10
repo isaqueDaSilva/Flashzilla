@@ -9,9 +9,7 @@ import CoreData
 import Foundation
 
 actor CardsManager {
-    static let shared = CardsManager()
-    
-    var cards = [Card]()
+    var cards: [Card]
     let container: NSPersistentContainer
     let context: NSManagedObjectContext
     
@@ -47,7 +45,8 @@ actor CardsManager {
         save()
     }
     
-    private init() {
+    init() {
+        self.cards = []
         self.container = NSPersistentContainer(name: "CardModel")
         self.context = container.viewContext
         

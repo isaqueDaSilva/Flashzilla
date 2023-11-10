@@ -9,7 +9,7 @@ import Foundation
 
 extension EditCardsView {
     class EditCardsViewModel: ObservableObject {
-        let manager = CardsManager.shared
+        let manager: CardsManager
         
         @Published var cards = [Card]()
         @Published var newPrompt = ""
@@ -48,7 +48,8 @@ extension EditCardsView {
             }
         }
         
-        init() {
+        init(manager: CardsManager) {
+            self.manager = manager
             getCards()
         }
     }

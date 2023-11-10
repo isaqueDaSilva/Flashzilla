@@ -10,7 +10,7 @@ import SwiftUI
 
 extension HomeView {
     class HomeViewModel: ObservableObject {
-        let manager = CardsManager.shared
+        let manager = CardsManager()
         
         @Published var cards = [Card]()
         @Published var timeRemaining = 100

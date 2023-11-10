@@ -124,7 +124,7 @@ struct HomeView: View {
             }
         }
         .sheet(isPresented: $viewModel.showingEditCardView, onDismiss: viewModel.gameReset) {
-            EditCardsView()
+            EditCardsView(manager: viewModel.manager)
         }
         
         .onReceive(viewModel.timer, perform: { newTime in
